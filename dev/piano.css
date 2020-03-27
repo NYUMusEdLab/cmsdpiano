@@ -110,6 +110,7 @@ position: static;
 }
 
 #Gb4{
+	position: absolute;
 	height:128px;
 	width:323px;
 	left:512px;
@@ -117,6 +118,7 @@ position: static;
 }
 
 #Ab4{
+	position: absolute;
 	height:128px;
 	width:323px;
 	left:512px;
@@ -124,6 +126,7 @@ position: static;
 }
 
 #Bb4{
+	position: absolute;
 	height:128px;
 	width:323px;
 	left:512px;
@@ -131,6 +134,7 @@ position: static;
 }
 
 #Db5{
+	position: absolute;
 	height:128px;
 	width:323px;
 	left:512px;
@@ -215,6 +219,7 @@ position: static;
 }
 
 #W{
+
 	height:128px;
 	width:323px;
 	left:512px;
