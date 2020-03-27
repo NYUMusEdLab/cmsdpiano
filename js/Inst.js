@@ -17,7 +17,7 @@ Modernizr.load({
 =============================================================================*/
 var INST = function(){
 
-	var version = "0.1";
+	var version = "2.0";
 
 	//tally up the loading
 	var totalLoad = 0;
@@ -109,7 +109,7 @@ INST.KEY.prototype.startNote = function(){
 
 //called when the sound is done playing
 INST.KEY.prototype.endNote = function(){
-	// this.dom.endNote();	
+	// this.dom.endNote();
 }
 
 /*
@@ -186,5 +186,5 @@ INST.DOM.prototype.startNote = function(){
 
 //called when the sound is done playing
 INST.DOM.prototype.endNote = function(){
-	this.$img.css("opacity", 0);	
+	this.$img.css("opacity", 0);
 }
