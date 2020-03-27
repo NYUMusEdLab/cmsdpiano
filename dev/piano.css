@@ -39,7 +39,7 @@ noscript {
 #titlebar a img{
 	position: relative;
 	opacity: 1;
-	width: 950px;
+	width: 100%;
 	height: 98px;
 	top: 7px;
 	z-index: 3;
