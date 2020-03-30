@@ -125,7 +125,7 @@ noscript {
 
 .key img {
   height: 100%;
-  width: 178vh;
+  width: 178vh; /** this is not being used, is being added programatically */
   max-height: 56.25vw;
   max-width: 100%;
   position: relative !important;
