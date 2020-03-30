@@ -34,7 +34,7 @@ var INST = (function() {
 
   function makeKeys() {
     for (var id in KEYMAP) {
-      var k = new INST.KEY(id);
+      var k = new INST.KEY(id, KEYMAP[id].color);
       keys.push(k);
     }
   }
@@ -92,8 +92,9 @@ var INST = (function() {
 
 	trigger a sound when clicked
 =============================================================================*/
-INST.KEY = function(id) {
+INST.KEY = function(id, color) {
   this.id = id;
+  this.color = color;
   //setup the dom
   this.dom = new INST.DOM(this);
   //setup the sound
@@ -149,7 +150,29 @@ INST.DOM = function(key) {
 				that.endNote();
 			}
 		});
-	}*/
+  }*/
+  this.$keyboardMobile = $(".keyboard-mobile");
+  //console.log(this.$keyboardMobile);
+  if (key.color) {
+    var keyboardKey = document.createElement("div");
+    keyboardKey.classList.add(key.id);
+    keyboardKey.style.backgroundColor = key.color;
+    keyboardKey.addEventListener("touchstart", function(e) {
+      e.preventDefault();
+      that.isDown = true;
+      that.startNote();
+      keyboardKey.style.opacity = 1;
+    });
+    keyboardKey.addEventListener("touchend", function(e) {
+      e.preventDefault();
+      that.isDown = false;
+      that.endNote();
+      keyboardKey.style.opacity = 0.6;
+    });
+
+    this.$keyboardMobile.append(keyboardKey);
+  }
+
   $(document).keydown(function(e) {
     var whichKey = KEYMAP[key.id].keyCode;
     if (e.which === whichKey && INST.loaded && !that.isDown) {
@@ -181,6 +204,12 @@ INST.DOM.prototype.imageLoaded = function() {
     that.endNote();
     return false;
   });
+  this.$img.width(this.$img.height() * 1.78);
+
+  $(window).resize(function() {
+    that.$img.width(that.$img.height() * 1.78);
+  });
+
   // this.$img.on("touchstart", $.proxy(this.startNote, this));
   INST.loadResolved();
 };
