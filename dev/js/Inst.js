@@ -118,6 +118,10 @@ $(".closeBtn").click(e => {
   $(".popup").css("display", "none");
 });
 
+$(".helpBtn").click(e => {
+  $(".popup").css("display", "block");
+});
+
 INST.DOM = function(key) {
   this.key = key;
   //get the dom el

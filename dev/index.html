@@ -13,6 +13,8 @@
 	<script src='./js/soundmanager2.min.js'></script>
 	<!-- css -->
 	<link rel="stylesheet" type="text/css" href="./piano.css">
+	<!-- font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:400,400i&display=swap" rel="stylesheet">
 </head>
 <body>
 	<noscript>
@@ -22,6 +24,7 @@
 	<div id='titlebar'>
 		<a id='icon' href="http://www.chambermusicdetroit.org"><img src='./media/logos/NewLogo5-blue.png'/></a>
 	</div>
+	<div class="helpBtn">?</div>
 	<div id="container">
 		<video width="100%" height="100%" controls loop volume="0.6">
   			<source src="media/piano.mp4" type="video/mp4">
@@ -51,18 +54,18 @@
 		</div>
 	</div>
 	<div class="popup">
-		<div class="closeBtn">(x)</div>
-		<div id="credits" text-align=center>
-			<center><font size="+1">Press the 'z' through '/' keys on the bottom row of your computer keyboard to play along with the video.<p>&nbsp;</font>
-			</center>
+		<div class="closeBtn">x</div>
+		<div class="title"><img src="./media/logos/NewLogo5-blue-transparent.png" /><div>Virtual Piano Duet</div></div>
+		<div class="instructions" >
+			Press the 'z' through '/' keys on the bottom row of your computer keyboard to play along with the video.
 		</div>
-		<div id="credits" text-align=center>
+		<div class="credits">
 			<center>Music composed and performed by <a href="http://www.chambermusicdetroit.org/Steve"><font color=black>Steve Wogaman</font></a> ... <b>and YOU!</b><p>Designed by <a href="http://twitter.com/alexruthmann/"><font color=black>@alexruthmann</font></a> at the <a href="http://steinhardt.nyu.edu/music/"><font color=black>NYU Steinhardt</font></a> <a href="http://www.alexruthmann.com/blog1/"><font color=black>Music Experience Design Lab</font></a>. HTML 5 web audio code adapted from <a href="http://yotammann.com"><font color=black>Yotam Mann</font></a>.<p>
-			<i><a href="http://www.makeymakey.com/"><font color=black>MaKey MaKey</font></a> users: you can play 10 different piano notes, using w, a, s, d, f, left, up, right, down and space.</i></center>
+			<a href="http://www.makeymakey.com/"><font color=black>MaKey MaKey</font></a> users: you can play 10 different piano notes, using w, a, s, d, f, left, up, right, down and space.</center>
 		</div>
-		<div id="loading">
+		<!--<div id="loading">
 			<div id="loadingText">Loading...</div>
-		</div>
+		</div>-->
 	</div>
 	<!--application-->
 	<script type="text/javascript">
