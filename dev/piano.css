@@ -106,11 +106,16 @@ noscript {
   width: 100%;
   text-align: center;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .key img {
   height: 100%;
   width: 178vh;
+  max-height: 56.25vw;
+  max-width: 100%;
   position: relative !important;
 }
 
