@@ -61,6 +61,7 @@ noscript {
   background-color: #000000;
   background-position: 0px 0px;
   background-repeat: no-repeat;
+  z-index: 1;
 }
 
 #loading {
@@ -139,6 +140,7 @@ noscript {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 20px;
   left: calc(50% - 300px);
+  z-index: 3;
 }
 
 .popup .closeBtn {
@@ -241,4 +243,16 @@ noscript {
     position: relative;
     height: 75vh;
   }
+}
+
+.transparency {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2;
 }

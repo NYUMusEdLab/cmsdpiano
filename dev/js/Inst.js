@@ -117,10 +117,12 @@ INST.KEY.prototype.endNote = function() {
 
 $(".closeBtn").click(e => {
   $(".popup").css("display", "none");
+  $(".transparency").css("display", "none");
 });
 
 $(".helpBtn").click(e => {
   $(".popup").css("display", "block");
+  $(".transparency").css("display", "block");
 });
 
 INST.DOM = function(key) {
@@ -135,6 +137,7 @@ INST.DOM = function(key) {
   //boolean value if the key is currently down to prevent multiple keyclicks while down
   this.isDown = false;
   //listen for keypresses
+  this.$keyboardMobile = $(".keyboard-mobile");
   var that = this;
   //if it's an A then bind it to the mouseclick
   /*	if (key.id === "A"){
@@ -151,11 +154,12 @@ INST.DOM = function(key) {
 			}
 		});
   }*/
-  this.$keyboardMobile = $(".keyboard-mobile");
+  var other = that;
   //console.log(this.$keyboardMobile);
   if (key.color) {
     var keyboardKey = document.createElement("div");
     keyboardKey.classList.add(key.id);
+    keyboardKey.classList.add("mobile-key");
     keyboardKey.style.backgroundColor = key.color;
     keyboardKey.addEventListener("touchstart", function(e) {
       e.preventDefault();
@@ -163,19 +167,59 @@ INST.DOM = function(key) {
       that.startNote();
       keyboardKey.style.opacity = 1;
     });
+    //sliding
+    var currentClicked;
+    keyboardKey.addEventListener("touchmove", function(e) {
+      e.preventDefault();
+      var selectedEl = document.elementFromPoint(
+        e.touches[0].clientX,
+        e.touches[0].clientY
+      );
+      var nextElementId =
+        selectedEl &&
+        $(selectedEl)
+          .attr("class")
+          .split(" ")[0];
+      if (
+        !$(selectedEl).hasClass(that.key.id) &&
+        $(selectedEl).hasClass("mobile-key") &&
+        currentClicked !== nextElementId
+      ) {
+        currentClicked = nextElementId;
+        var newHighlighted = INST.keys.find(({ id }) => id === nextElementId);
+
+        newHighlighted.isDown = true;
+        img.src =
+          "./media/fullvideoimagesnew/" + KEYMAP[nextElementId].image + ".png";
+        console.log("KEYMAP[nextElementId].image", KEYMAP[nextElementId].image);
+        img.onload = $.proxy(this.imageLoaded, this);
+        newHighlighted.$img = $(img);
+        newHighlighted.startNote();
+        //selectedEl.style.opacity = 1;
+        other = newHighlighted;
+      }
+    });
     keyboardKey.addEventListener("touchend", function(e) {
       e.preventDefault();
       that.isDown = false;
       that.endNote();
       keyboardKey.style.opacity = 0.6;
+      //console.log("that", that);
     });
-
+    this.$mobileKey = $(keyboardKey);
     this.$keyboardMobile.append(keyboardKey);
   }
 
   $(document).keydown(function(e) {
     var whichKey = KEYMAP[key.id].keyCode;
-    if (e.which === whichKey && INST.loaded && !that.isDown) {
+    var instructionsVisibility = $(".transparency").css("display");
+    console.log(instructionsVisibility);
+    if (
+      e.which === whichKey &&
+      INST.loaded &&
+      !that.isDown &&
+      instructionsVisibility !== "block"
+    ) {
       e.preventDefault();
       that.isDown = true;
       that.startNote();
@@ -217,10 +261,12 @@ INST.DOM.prototype.imageLoaded = function() {
 //called when the sound is started
 INST.DOM.prototype.startNote = function() {
   this.$img.css("opacity", 1);
+  this.$mobileKey.css("opacity", 1);
   this.key.startNote();
 };
 
 //called when the sound is done playing
 INST.DOM.prototype.endNote = function() {
   this.$img.css("opacity", 0);
+  this.$mobileKey.css("opacity", 0.6);
 };
