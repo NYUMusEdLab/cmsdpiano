@@ -213,7 +213,6 @@ INST.DOM = function(key) {
   $(document).keydown(function(e) {
     var whichKey = KEYMAP[key.id].keyCode;
     var instructionsVisibility = $(".transparency").css("display");
-    console.log(instructionsVisibility);
     if (
       e.which === whichKey &&
       INST.loaded &&
