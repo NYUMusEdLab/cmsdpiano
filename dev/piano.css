@@ -233,6 +233,22 @@ noscript {
     transform: rotate(90deg);
   }
 } */
+.content-mobile ol {
+  font-size: 14px;
+}
+
+.content-mobile li {
+  text-align: left;
+}
+
+.content-mobile img {
+  opacity: 0.3;
+}
+
+.musedlab-logo {
+  float: right;
+  padding: 5px;
+}
 
 /**media query touch devices */
 @media (hover: none) {
@@ -247,6 +263,25 @@ noscript {
   .key img {
     object-fit: cover;
     object-position: bottom;
+    width: 100%;
+  }
+  .content-mobile {
+    display: block;
+  }
+  .content-mobile .instructions {
+    padding-bottom: 0;
+  }
+  .content-desktop {
+    display: none;
+  }
+}
+
+@media (hover: hover) {
+  .content-mobile {
+    display: none;
+  }
+  .content-desktop {
+    display: block;
   }
 }
 
