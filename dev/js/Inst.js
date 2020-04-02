@@ -17,6 +17,7 @@ Modernizr.load({
 =============================================================================*/
 var INST = (function() {
   var version = "2.0";
+  var isTouchDevice;
 
   //tally up the loading
   var totalLoad = 0;
@@ -28,6 +29,9 @@ var INST = (function() {
     console.log("Virtual Chamber Music v" + version);
     makeKeys();
   }
+
+  if (is_touch_device()) isTouchDevice = true;
+  else isTouchDevice = false;
 
   //all the piano keys
   var keys = [];
@@ -83,6 +87,7 @@ var INST = (function() {
     initialize: init,
     loadResolved: loadResolved,
     keys: keys,
+    isTouchDevice: isTouchDevice,
     loaded: false
   };
 })();
@@ -172,8 +177,8 @@ INST.DOM = function(key) {
     keyboardKey.addEventListener("touchmove", function(e) {
       e.preventDefault();
       var selectedEl = document.elementFromPoint(
-        e.touches[0].clientX,
-        e.touches[0].clientY
+        e.changedTouches[0].clientX,
+        e.changedTouches[0].clientY
       );
       var nextElementId =
         selectedEl &&
@@ -191,7 +196,7 @@ INST.DOM = function(key) {
         newHighlighted.isDown = true;
         img.src =
           "./media/fullvideoimagesnew/" + KEYMAP[nextElementId].image + ".png";
-        console.log("KEYMAP[nextElementId].image", KEYMAP[nextElementId].image);
+        //console.log("KEYMAP[nextElementId].image", KEYMAP[nextElementId].image);
         img.onload = $.proxy(this.imageLoaded, this);
         newHighlighted.$img = $(img);
         newHighlighted.startNote();
@@ -247,10 +252,10 @@ INST.DOM.prototype.imageLoaded = function() {
     that.endNote();
     return false;
   });
-  this.$img.width(this.$img.height() * 1.78);
+  if (!INST.isTouchDevice) this.$img.width(this.$img.height() * 1.78);
 
   $(window).resize(function() {
-    that.$img.width(that.$img.height() * 1.78);
+    if (!INST.isTouchDevice) that.$img.width(that.$img.height() * 1.78);
   });
 
   // this.$img.on("touchstart", $.proxy(this.startNote, this));

@@ -198,7 +198,7 @@ noscript {
 }
 
 .keyboard-mobile {
-  height: 25vh;
+  height: 30vh;
   width: 100%;
   display: none;
 }
@@ -241,7 +241,12 @@ noscript {
   }
   #container {
     position: relative;
-    height: 75vh;
+    height: 70vh;
+  }
+  #container video,
+  .key img {
+    object-fit: cover;
+    object-position: bottom;
   }
 }
 
