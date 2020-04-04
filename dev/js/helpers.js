@@ -19,7 +19,6 @@ function is_touch_device() {
 }
 
 function getClickedEl(e) {
-  console.log("e", e);
   var lastElDom = document.elementFromPoint(
     e.changedTouches[0].clientX,
     e.changedTouches[0].clientY
