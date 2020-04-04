@@ -17,3 +17,18 @@ function is_touch_device() {
   var query = ["(", prefixes.join("touch-enabled),("), "heartz", ")"].join("");
   return mq(query);
 }
+
+function getClickedEl(e) {
+  console.log("e", e);
+  var lastElDom = document.elementFromPoint(
+    e.changedTouches[0].clientX,
+    e.changedTouches[0].clientY
+  );
+  var lastElId =
+    lastElDom &&
+    $(lastElDom)
+      .attr("class")
+      .split(" ")[0];
+  var lastEl = INST.keys.find(({ id }) => id === lastElId);
+  return lastEl;
+}

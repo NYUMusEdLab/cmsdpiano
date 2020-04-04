@@ -159,21 +159,21 @@ INST.DOM = function(key) {
 			}
 		});
   }*/
-  var other = that;
-  //console.log(this.$keyboardMobile);
   if (key.color) {
+    var currentClickedId;
     var keyboardKey = document.createElement("div");
     keyboardKey.classList.add(key.id);
     keyboardKey.classList.add("mobile-key");
     keyboardKey.style.backgroundColor = key.color;
+    //first or single click
     keyboardKey.addEventListener("touchstart", function(e) {
+      currentClickedId = that.key.id;
       e.preventDefault();
       that.isDown = true;
       that.startNote();
       keyboardKey.style.opacity = 1;
     });
     //sliding
-    var currentClicked;
     keyboardKey.addEventListener("touchmove", function(e) {
       e.preventDefault();
       var selectedEl = document.elementFromPoint(
@@ -185,31 +185,36 @@ INST.DOM = function(key) {
         $(selectedEl)
           .attr("class")
           .split(" ")[0];
+      var newHighlighted = getClickedEl(e);
+      var currentClickedEl = INST.keys.find(
+        ({ id }) => id === currentClickedId
+      );
       if (
         !$(selectedEl).hasClass(that.key.id) &&
         $(selectedEl).hasClass("mobile-key") &&
-        currentClicked !== nextElementId
+        currentClickedId !== nextElementId
       ) {
-        currentClicked = nextElementId;
-        var newHighlighted = INST.keys.find(({ id }) => id === nextElementId);
+        //deactivate previous key
+        if (currentClickedEl) {
+          currentClickedEl.isDown = false;
+          currentClickedEl.dom.endNote();
+        }
+
+        //
+        currentClickedId = nextElementId;
 
         newHighlighted.isDown = true;
-        img.src =
-          "./media/fullvideoimagesnew/" + KEYMAP[nextElementId].image + ".png";
-        //console.log("KEYMAP[nextElementId].image", KEYMAP[nextElementId].image);
-        img.onload = $.proxy(this.imageLoaded, this);
-        newHighlighted.$img = $(img);
-        newHighlighted.startNote();
-        //selectedEl.style.opacity = 1;
-        other = newHighlighted;
+        var imageEl = $("#" + newHighlighted.id + " img");
+        newHighlighted.$img = $(imageEl);
+        newHighlighted.dom.startNote();
       }
     });
     keyboardKey.addEventListener("touchend", function(e) {
       e.preventDefault();
-      that.isDown = false;
-      that.endNote();
+      var touchUpEl = getClickedEl(e); //in helpers.js
+      touchUpEl.dom.isDown = false;
+      touchUpEl.dom.endNote();
       keyboardKey.style.opacity = 0.6;
-      //console.log("that", that);
     });
     this.$mobileKey = $(keyboardKey);
     this.$keyboardMobile.append(keyboardKey);
