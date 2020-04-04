@@ -54,33 +54,40 @@ var INST = (function() {
   }
 
   function allLoaded() {
-    $("#loadingText").html("Click here to play");
+    console.log("allLoaded");
     var $loading = $("#loading");
     $loading.css("cursor", "pointer");
-    $loading.one("click", hideClickHere);
+    $(".loadingText").html("Click here to play");
     INST.loaded = true;
+    $loading.one("click", hidePopUp);
     // focusUnfocus();
   }
 
-  function hideClickHere() {
-    $("#loading").fadeTo(500, 0, function() {
-      $(this).css("z-index", -1);
+  function hidePopUp() {
+    if (INST.loaded === true) {
+      $(".popup, .transparency").fadeTo(500, 0, function() {
+        $(this).css("display", "none");
+      });
+    }
+  }
+
+  function showPopUp() {
+    $(".popup, .transparency").fadeTo(500, 1, function() {
+      $(this).css("display", "block");
     });
   }
 
-  function showClickHere() {
-    var $loading = $("#loading");
-    $loading.css("z-index", 1000);
-    $loading.fadeTo(500, 0.95);
-  }
+  $(".closeBtn").click(hidePopUp);
+
+  $(".helpBtn").click(showPopUp);
 
   //listen for unfocus events
-  function focusUnfocus() {
-    $(window).blur(showClickHere);
-    $(window).focus(function() {
-      hideClickHere();
-    });
-  }
+  // function focusUnfocus() {
+  //   $(window).blur(showClickHere);
+  //   $(window).focus(function() {
+  //     hidePopUp();
+  //   });
+  // }
 
   //API
   return {
@@ -119,16 +126,6 @@ INST.KEY.prototype.endNote = function() {
 /*
 	dom interaction
 */
-
-$(".closeBtn").click(e => {
-  $(".popup").css("display", "none");
-  $(".transparency").css("display", "none");
-});
-
-$(".helpBtn").click(e => {
-  $(".popup").css("display", "block");
-  $(".transparency").css("display", "block");
-});
 
 INST.DOM = function(key) {
   this.key = key;
