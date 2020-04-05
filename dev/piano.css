@@ -66,9 +66,6 @@ noscript {
   z-index: 1;
 }
 
-#loading {
-}
-
 #loadingText {
   position: absolute;
   left: 0px;
@@ -296,5 +293,11 @@ noscript {
 
   .popup {
     top: 25%;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
+  html {
+    transform: rotate(90deg);
   }
 }
