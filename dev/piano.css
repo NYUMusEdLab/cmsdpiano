@@ -299,6 +299,7 @@ noscript {
 @media only screen and (orientation: portrait) {
   html {
     height: 100vw;
+    width: 100vh;
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
