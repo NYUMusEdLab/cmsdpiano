@@ -12,6 +12,16 @@ Modernizr.load({
   }
 });
 
+// screen.orientation.lock("landscape-primary");
+
+// screen.orientation.addEventListener("change", () => {
+//   // screen.orientation.lock("landscape-primary");
+//   if (screen.orientation.type.indexOf("portrait") >= 0)
+//     $("body").css("transform", "rotate(90deg)");
+// });
+
+//console.log(ScreenOrientation);
+
 /*=============================================================================
 	INST
 =============================================================================*/
