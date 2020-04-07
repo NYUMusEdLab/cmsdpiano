@@ -55,21 +55,25 @@ var INST = (function() {
 
   var loadCount = 0;
 
+  var $loadingWrapper = $("#loadingWrapper");
+  var $loadingBar = $("#loadingBar");
+  var $loadingText = $(".loadingText");
+
   //called when a load is resolved
   function loadResolved() {
     loadCount++;
+    $loadingBar.width(($loadingWrapper.width() * loadCount) / totalLoad / 2);
     if (loadCount === totalLoad * 2) {
       allLoaded();
     }
   }
 
   function allLoaded() {
-    console.log("allLoaded");
-    var $loading = $("#loading");
-    $loading.css("cursor", "pointer");
+    $loadingWrapper.css("cursor", "pointer");
+    $loadingBar.css("background-color", "red");
     $(".loadingText").html("Click here to play");
     INST.loaded = true;
-    $loading.one("click", hidePopUp);
+    $loadingWrapper.one("click", hidePopUp);
     // focusUnfocus();
   }
 
@@ -278,6 +282,7 @@ INST.DOM.prototype.imageLoaded = function() {
 INST.DOM.prototype.startNote = function() {
   this.$img.css("opacity", 1);
   this.$mobileKey.css("opacity", 1);
+  this.$mobileKey.css("border-top", "8px solid black");
   this.key.startNote();
 };
 
@@ -285,4 +290,5 @@ INST.DOM.prototype.startNote = function() {
 INST.DOM.prototype.endNote = function() {
   this.$img.css("opacity", 0);
   this.$mobileKey.css("opacity", 0.6);
+  this.$mobileKey.css("border", "none");
 };
