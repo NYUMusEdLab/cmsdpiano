@@ -12,6 +12,19 @@ Modernizr.load({
   }
 });
 
+var $loadingWrapper = $("#loadingWrapper");
+var $loadingBar = $("#loadingBar");
+
+function handleRotation() {
+  if (document.documentElement.requestFullscreen) {
+    document.querySelector("body").requestFullscreen();
+    screen.lockOrientation("landscape-primary");
+  } else if (document.documentElement.webkitRequestFullScreen) {
+    document.querySelector("body").webkitRequestFullScreen();
+    screen.orientation.lock("landscape-primary");
+  }
+}
+
 // screen.orientation.lock("landscape-primary");
 
 // screen.orientation.addEventListener("change", () => {
@@ -37,6 +50,7 @@ var INST = (function() {
 
   function init() {
     console.log("Virtual Chamber Music v" + version);
+    $(document).one("click", handleRotation);
     makeKeys();
   }
 
@@ -55,14 +69,12 @@ var INST = (function() {
 
   var loadCount = 0;
 
-  var $loadingWrapper = $("#loadingWrapper");
-  var $loadingBar = $("#loadingBar");
-  var $loadingText = $(".loadingText");
-
   //called when a load is resolved
   function loadResolved() {
     loadCount++;
-    $loadingBar.width(($loadingWrapper.width() * loadCount) / totalLoad / 2);
+    var loadingBarWidth = (loadCount / totalLoad / 2) * 100 + "%";
+    console.log(loadingBarWidth, "width");
+    $loadingBar.width(loadingBarWidth);
     if (loadCount === totalLoad * 2) {
       allLoaded();
     }
@@ -73,7 +85,7 @@ var INST = (function() {
     $loadingBar.css("background-color", "red");
     $(".loadingText").html("Click here to play");
     INST.loaded = true;
-    $loadingWrapper.one("click", hidePopUp);
+    $loadingWrapper.on("click", hidePopUp);
     // focusUnfocus();
   }
 
@@ -271,6 +283,8 @@ INST.DOM.prototype.imageLoaded = function() {
   if (!INST.isTouchDevice) this.$img.width(this.$img.height() * 1.78);
 
   $(window).resize(function() {
+    // var mql = window.matchMedia("(orientation: portrait)");
+    // console.log("mql", mql);
     if (!INST.isTouchDevice) that.$img.width(that.$img.height() * 1.78);
   });
 
