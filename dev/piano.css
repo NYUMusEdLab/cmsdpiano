@@ -48,8 +48,7 @@ noscript {
 
 #titlebar {
   position: relative;
-  width: 342px;
-  height: 80px;
+  width: 23%;
   background-color: #fff;
   opacity: 0.5;
   top: 5px;
@@ -58,13 +57,12 @@ noscript {
 
 #titlebar a {
   display: inline-block;
+  position: relative;
 }
 
 #titlebar a img {
   position: relative;
-  opacity: 1;
-  z-index: 3;
-  object-fit: contain;
+  vertical-align: middle;
 }
 
 #container {
@@ -294,12 +292,12 @@ noscript {
     object-position: bottom;
     width: 100%;
   }
+  #titlebar {
+    width: 38%;
+  }
   .content-mobile {
     display: block;
   }
-  /*.content-mobile .instructions {
-    padding: 0 15px;
-  }*/
   .content-desktop {
     display: none;
   }
