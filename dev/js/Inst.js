@@ -14,15 +14,24 @@ Modernizr.load({
 
 var $loadingWrapper = $("#loadingWrapper");
 var $loadingBar = $("#loadingBar");
-const video = document.getElementsByTagName("video")[0];
 
-screen.orientation.addEventListener("change", () => {
-  if (screen.orientation.type.indexOf("portrait") >= 0) {
-    video.pause();
-  } else {
-    video.play();
+function handleRotation() {
+  if (document.documentElement.requestFullscreen) {
+    document.querySelector("body").requestFullscreen();
+    screen.lockOrientation("landscape-primary");
+  } else if (document.documentElement.webkitRequestFullScreen) {
+    document.querySelector("body").webkitRequestFullScreen();
+    screen.orientation.lock("landscape-primary");
   }
-});
+}
+
+// screen.orientation.lock("landscape-primary");
+
+// screen.orientation.addEventListener("change", () => {
+//   // screen.orientation.lock("landscape-primary");
+//   if (screen.orientation.type.indexOf("portrait") >= 0)
+//     $("body").css("transform", "rotate(90deg)");
+// });
 
 //console.log(ScreenOrientation);
 
@@ -41,7 +50,7 @@ var INST = (function() {
 
   function init() {
     console.log("Virtual Chamber Music v" + version);
-    //$(document).one("click", handleRotation);
+    $(document).one("click", handleRotation);
     makeKeys();
   }
 
@@ -73,16 +82,10 @@ var INST = (function() {
 
   function allLoaded() {
     $loadingWrapper.css("cursor", "pointer");
-    $loadingBar.css("background-color", "#2c3b98");
+    $loadingBar.css("background-color", "red");
     $(".loadingText").html("Click here to play");
     INST.loaded = true;
     $loadingWrapper.on("click", hidePopUp);
-    //this hack to position the CMS logo
-    // const imageLeftPosition = document
-    //   .querySelector("#Gb4 img")
-    //   .getBoundingClientRect().left;
-    // const CMSLogo = document.querySelector("#titlebar");
-    // CMSLogo.style.left = imageLeftPosition + "px";
     // focusUnfocus();
   }
 
@@ -90,7 +93,6 @@ var INST = (function() {
     if (INST.loaded === true) {
       $(".popup, .transparency").fadeTo(500, 0, function() {
         $(this).css("display", "none");
-        video.play();
       });
     }
   }
@@ -98,9 +100,10 @@ var INST = (function() {
   function showPopUp() {
     $(".popup, .transparency").fadeTo(500, 1, function() {
       $(this).css("display", "block");
-      video.pause();
     });
   }
+
+  $(".closeBtn").click(hidePopUp);
 
   $(".helpBtn").click(showPopUp);
 
@@ -267,7 +270,6 @@ INST.DOM.prototype.imageLoaded = function() {
   this.$el.append(this.$img);
   this.$img.css("opacity", 0);
   var that = this;
-
   this.$img.on("mousedown touchstart", function(e) {
     e.preventDefault();
     that.startNote();
