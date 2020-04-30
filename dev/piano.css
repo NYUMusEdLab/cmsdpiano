@@ -9,19 +9,6 @@ body {
   width: 100%; /** to avoid zooming in mobile **/
 }
 
-.tilt {
-  z-index: 100;
-  background-color: pink;
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: none;
-}
-
 .key img,
 #titlebar img {
   position: absolute;
@@ -48,21 +35,25 @@ noscript {
 
 #titlebar {
   position: relative;
-  width: 23%;
+  width: 342px;
+  height: 110px;
   background-color: #fff;
-  opacity: 0.5;
+  opacity: 0.9;
   top: 5px;
   z-index: 1;
 }
 
 #titlebar a {
   display: inline-block;
-  position: relative;
 }
 
 #titlebar a img {
   position: relative;
-  vertical-align: middle;
+  opacity: 1;
+  height: 98px;
+  top: 7px;
+  z-index: 3;
+  object-fit: contain;
 }
 
 #container {
@@ -78,22 +69,22 @@ noscript {
 
 #loadingWrapper {
   background-color: black;
-  border-radius: 20px;
-  padding: 3px;
+  border-radius: 15px;
+  padding: 6px;
   margin: 0 auto;
-  width: 50%;
+  width: 40%;
+  margin-top: 1em;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-bottom: 25px;
 }
 
 #loadingBar {
   background-color: gray;
-  border-radius: 15px;
+  border-radius: 10px;
   width: 0;
-  height: 1.6em;
+  height: 1.4em;
   align-self: self-start;
 }
 
@@ -116,23 +107,15 @@ noscript {
 .credits {
   position: relative;
   color: black;
+  text-align: center;
   font-family: "Montserrat", sans-serif;
-  font-size: 0.9em;
-  margin: 0 auto;
-  padding: 20px 30px;
-}
-
-.content-desktop .instructions {
-  border-bottom: 1px solid black;
   font-style: italic;
+  width: 80%;
+  margin: 0 auto;
 }
 
-.content-desktop .credits {
-  font-weight: 300;
-}
-
-.content-mobile .instructions .text {
-  padding-bottom: 20px;
+.instructions {
+  padding: 25px;
 }
 
 .credits {
@@ -158,13 +141,28 @@ noscript {
 }
 
 .popup {
+  padding: 10px 15px;
   position: absolute;
   align-self: center;
-  max-width: 500px;
-  width: 70%;
-  background-color: rgba(255, 255, 255, 1);
+  max-width: 600px;
+  width: 80%;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 20px;
   z-index: 3;
+}
+
+.popup .closeBtn {
+  float: right;
+  color: white;
+  border: 3px solid white;
+  background-color: black;
+  padding: 4px 10px;
+  margin-right: -30px;
+  margin-top: -30px;
+  border-radius: 20px;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .helpBtn {
@@ -192,22 +190,19 @@ noscript {
   opacity: 0.9;
 }
 
-.popup .title {
-  padding: 20px 30px 0 30px;
-}
-
 .popup .title img {
-  width: 30%;
+  width: 40%;
   vertical-align: middle;
 }
 
 .popup .title div {
   display: inline;
   font-family: "Montserrat", sans-serif;
-  font-size: 1em;
+  font-size: 2em;
+  letter-spacing: 0.05em;
   position: relative;
+  top: 8px;
   left: 12px;
-  top: 5px;
 }
 
 .keyboard-mobile {
@@ -255,8 +250,9 @@ noscript {
 }
 
 .content-mobile img {
-  opacity: 1;
+  opacity: 0.3;
   width: 100%;
+  max-width: 326px;
 }
 
 .musedlab-logo {
@@ -292,14 +288,17 @@ noscript {
     object-position: bottom;
     width: 100%;
   }
-  #titlebar {
-    width: 38%;
-  }
   .content-mobile {
     display: block;
   }
+  .content-mobile .instructions {
+    padding: 0 15px;
+  }
   .content-desktop {
     display: none;
+  }
+  .popup .title div {
+    font-size: 1.6em;
   }
 }
 
@@ -310,20 +309,9 @@ noscript {
   .content-desktop {
     display: block;
   }
-  .popup .title div {
-    font-size: 1.6em;
-    position: relative;
-    left: 12px;
-    top: 8px;
-  }
+
   .popup {
     top: 25%;
-  }
-}
-
-@media (hover: none) and (orientation: portrait) {
-  .tilt {
-    display: block;
   }
 }
 
