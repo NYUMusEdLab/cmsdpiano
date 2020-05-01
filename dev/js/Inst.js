@@ -4,7 +4,7 @@ Modernizr.load({
   // test : false,
   yep: "./js/WebAudioNote.js",
   nope: "./js/SMNote.js",
-  complete: function() {
+  complete: function () {
     if (INST && INST.AUDIO) {
       //initialize the sound
       INST.AUDIO.initialize();
@@ -14,22 +14,40 @@ Modernizr.load({
 
 var $loadingWrapper = $("#loadingWrapper");
 var $loadingBar = $("#loadingBar");
+var $transparency = $(".transparency");
+
 const video = document.getElementsByTagName("video")[0];
 
-screen.orientation.addEventListener("change", () => {
-  if (screen.orientation.type.indexOf("portrait") >= 0) {
-    video.pause();
-  } else {
-    video.play();
-  }
-});
+var orientation = (screen.orientation || {}).type || screen.mozOrientation || screen.msOrientation;
 
-//console.log(ScreenOrientation);
+if (orientation) {
+  screen.orientation.addEventListener("change", () => {
+    if (screen.orientation.type.indexOf("portrait") >= 0) {
+      video.pause();
+    } else {
+      video.play();
+    }
+  });
+} else if (window.orientation) {
+  switch (window.orientation) {
+    case 0:
+    case 180:
+      video.pause();
+      // Portrait (Upside-down)
+      break;
+    case -90:
+    case 90:
+      video.play();
+      // Landscape  (Counterclockwise)
+      break;
+  }
+
+}
 
 /*=============================================================================
 	INST
 =============================================================================*/
-var INST = (function() {
+var INST = (function () {
   var version = "2.0";
   var isTouchDevice;
 
@@ -64,7 +82,6 @@ var INST = (function() {
   function loadResolved() {
     loadCount++;
     var loadingBarWidth = (loadCount / totalLoad / 2) * 100 + "%";
-    console.log(loadingBarWidth, "width");
     $loadingBar.width(loadingBarWidth);
     if (loadCount === totalLoad * 2) {
       allLoaded();
@@ -73,10 +90,11 @@ var INST = (function() {
 
   function allLoaded() {
     $loadingWrapper.css("cursor", "pointer");
-    loadingBar.css("background-color", "#2c3b98");
+    $loadingBar.css("background-color", "#2c3b98");
     $(".loadingText").html("Click here to play");
     INST.loaded = true;
     $loadingWrapper.on("click", hidePopUp);
+    $transparency.on("click", hidePopUp);
     //this hack to position the CMS logo
     // const imageLeftPosition = document
     //   .querySelector("#Gb4 img")
@@ -88,15 +106,15 @@ var INST = (function() {
 
   function hidePopUp() {
     if (INST.loaded === true) {
-      $(".popup, .transparency").fadeTo(500, 0, function() {
+      $(".popup, .transparency").fadeTo(500, 0, function () {
         $(this).css("display", "none");
-         video.play();
+        video.play();
       });
     }
   }
 
   function showPopUp() {
-    $(".popup, .transparency").fadeTo(500, 1, function() {
+    $(".popup, .transparency").fadeTo(500, 1, function () {
       $(this).css("display", "block");
       video.pause();
     });
@@ -127,7 +145,7 @@ var INST = (function() {
 
 	trigger a sound when clicked
 =============================================================================*/
-INST.KEY = function(id, color) {
+INST.KEY = function (id, color) {
   this.id = id;
   this.color = color;
   //setup the dom
@@ -137,12 +155,12 @@ INST.KEY = function(id, color) {
 };
 
 //called when a key is clicked
-INST.KEY.prototype.startNote = function() {
+INST.KEY.prototype.startNote = function () {
   this.sound.startNote();
 };
 
 //called when the sound is done playing
-INST.KEY.prototype.endNote = function() {
+INST.KEY.prototype.endNote = function () {
   // this.dom.endNote();
 };
 
@@ -150,7 +168,7 @@ INST.KEY.prototype.endNote = function() {
 	dom interaction
 */
 
-INST.DOM = function(key) {
+INST.DOM = function (key) {
   this.key = key;
   //get the dom el
   this.$el = $("#" + key.id);
@@ -186,7 +204,7 @@ INST.DOM = function(key) {
     keyboardKey.classList.add("mobile-key");
     keyboardKey.style.backgroundColor = key.color;
     //first or single click
-    keyboardKey.addEventListener("touchstart", function(e) {
+    keyboardKey.addEventListener("touchstart", function (e) {
       currentClickedId = that.key.id;
       e.preventDefault();
       that.isDown = true;
@@ -194,7 +212,7 @@ INST.DOM = function(key) {
       keyboardKey.style.opacity = 1;
     });
     //sliding
-    keyboardKey.addEventListener("touchmove", function(e) {
+    keyboardKey.addEventListener("touchmove", function (e) {
       e.preventDefault();
       var selectedEl = document.elementFromPoint(
         e.changedTouches[0].clientX,
@@ -229,7 +247,7 @@ INST.DOM = function(key) {
         newHighlighted.dom.startNote();
       }
     });
-    keyboardKey.addEventListener("touchend", function(e) {
+    keyboardKey.addEventListener("touchend", function (e) {
       e.preventDefault();
       var touchUpEl = getClickedEl(e); //in helpers.js
       touchUpEl.dom.isDown = false;
@@ -240,7 +258,7 @@ INST.DOM = function(key) {
     this.$keyboardMobile.append(keyboardKey);
   }
 
-  $(document).keydown(function(e) {
+  $(document).keydown(function (e) {
     var whichKey = KEYMAP[key.id].keyCode;
     var instructionsVisibility = $(".transparency").css("display");
     if (
@@ -254,7 +272,7 @@ INST.DOM = function(key) {
       that.startNote();
     }
   });
-  $(document).keyup(function(e) {
+  $(document).keyup(function (e) {
     var whichKey = KEYMAP[key.id].keyCode;
     if (e.which === whichKey && INST.loaded) {
       that.isDown = false;
@@ -263,24 +281,24 @@ INST.DOM = function(key) {
   });
 };
 
-INST.DOM.prototype.imageLoaded = function() {
+INST.DOM.prototype.imageLoaded = function () {
   this.$el.append(this.$img);
   this.$img.css("opacity", 0);
   var that = this;
 
-  this.$img.on("mousedown touchstart", function(e) {
+  this.$img.on("mousedown touchstart", function (e) {
     e.preventDefault();
     that.startNote();
     return false;
   });
-  this.$img.on("mouseup touchend", function(e) {
+  this.$img.on("mouseup touchend", function (e) {
     e.preventDefault();
     that.endNote();
     return false;
   });
   if (!INST.isTouchDevice) this.$img.width(this.$img.height() * 1.78);
 
-  $(window).resize(function() {
+  $(window).resize(function () {
     // var mql = window.matchMedia("(orientation: portrait)");
     // console.log("mql", mql);
     if (!INST.isTouchDevice) that.$img.width(that.$img.height() * 1.78);
@@ -291,7 +309,7 @@ INST.DOM.prototype.imageLoaded = function() {
 };
 
 //called when the sound is started
-INST.DOM.prototype.startNote = function() {
+INST.DOM.prototype.startNote = function () {
   this.$img.css("opacity", 1);
   this.$mobileKey.css("opacity", 1);
   this.$mobileKey.css("border-top", "8px solid black");
@@ -299,7 +317,7 @@ INST.DOM.prototype.startNote = function() {
 };
 
 //called when the sound is done playing
-INST.DOM.prototype.endNote = function() {
+INST.DOM.prototype.endNote = function () {
   this.$img.css("opacity", 0);
   this.$mobileKey.css("opacity", 0.6);
   this.$mobileKey.css("border", "none");

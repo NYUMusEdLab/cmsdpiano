@@ -11,15 +11,31 @@ body {
 
 .tilt {
   z-index: 100;
-  background-color: pink;
-  width: 100vw;
-  height: 100vh;
+  background-color: #2D3A99;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  height: 100vh;
+}
+
+.tilt .text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+.tilt img {
+  width: 60%;
+  height: 60%;
 }
 
 .key img,
@@ -105,6 +121,14 @@ noscript {
   padding: 5px;
   font-family: "Montserrat", sans-serif;
   font-style: italic;
+  /* disable text select */
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 
 #container * {
@@ -171,8 +195,8 @@ noscript {
   cursor: pointer;
   font-family: "Montserrat", sans-serif;
   position: absolute;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   right: 10px;
   top: 10px;
   color: white;
@@ -182,7 +206,7 @@ noscript {
   border-radius: 40px;
   font-family: sans-serif;
   font-weight: bold;
-  font-size: 2.6em;
+  font-size: 1.6em;
   z-index: 20;
   opacity: 0.5;
   text-align: center;
@@ -239,13 +263,6 @@ noscript {
   opacity: 0;
 }
 
-/* @media only screen and (orientation: portrait) {
-  body {
-    height: 100vw;
-    width: 100vh;
-    transform: rotate(90deg);
-  }
-} */
 .content-mobile ol {
   font-size: 14px;
 }
@@ -260,8 +277,14 @@ noscript {
 }
 
 .musedlab-logo {
-  float: right;
+  position: absolute;
+  right: 5px;
   padding: 5px;
+  width: 40px;
+}
+
+.musedlab-logo img {
+  width: 100%;
 }
 
 .transparency {
@@ -321,9 +344,12 @@ noscript {
   }
 }
 
-+@media (hover: none) and (orientation: portrait) {
+@media (hover: none) and (orientation: portrait) {
   .tilt {
-    display: block;
+    display: flex;
+  }
+  .keyboard-mobile {
+    display: none;
   }
 }
 /** rotate but incorrect position **/

@@ -1,7 +1,7 @@
 function is_touch_device() {
   var prefixes = " -webkit- -moz- -o- -ms- ".split(" ");
 
-  var mq = function(query) {
+  var mq = function (query) {
     return window.matchMedia(query).matches;
   };
 
@@ -30,4 +30,5 @@ function getClickedEl(e) {
       .split(" ")[0];
   var lastEl = INST.keys.find(({ id }) => id === lastElId);
   return lastEl;
+
 }
