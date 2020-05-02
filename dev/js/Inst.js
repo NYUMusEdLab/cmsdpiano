@@ -15,20 +15,23 @@ Modernizr.load({
 var $loadingWrapper = $("#loadingWrapper");
 var $loadingBar = $("#loadingBar");
 var $transparency = $(".transparency");
+var $popupVisible = true;
 
 const video = document.getElementsByTagName("video")[0];
 
-var orientation = (screen.orientation || {}).type || screen.mozOrientation || screen.msOrientation;
+//var orientation = (screen.orientation || {}).type || screen.mozOrientation || screen.msOrientation;
 
-if (orientation) {
+if (screen.orientation) {
   screen.orientation.addEventListener("change", () => {
-    if (screen.orientation.type.indexOf("portrait") >= 0) {
-      video.pause();
-    } else {
-      video.play();
+    if (!$popupVisible) {
+      if (screen.orientation.type.indexOf("portrait") >= 0) {
+        video.pause();
+      } else {
+        video.play();
+      }
     }
   });
-} else if (window.orientation) {
+} else if (window.orientation && !$popupVisible) {
   switch (window.orientation) {
     case 0:
     case 180:
@@ -41,7 +44,6 @@ if (orientation) {
       // Landscape  (Counterclockwise)
       break;
   }
-
 }
 
 /*=============================================================================
@@ -59,7 +61,6 @@ var INST = (function () {
 
   function init() {
     console.log("Virtual Chamber Music v" + version);
-    //$(document).one("click", handleRotation);
     makeKeys();
   }
 
@@ -109,6 +110,7 @@ var INST = (function () {
       $(".popup, .transparency").fadeTo(500, 0, function () {
         $(this).css("display", "none");
         video.play();
+        $popupVisible = false;
       });
     }
   }
@@ -117,6 +119,7 @@ var INST = (function () {
     $(".popup, .transparency").fadeTo(500, 1, function () {
       $(this).css("display", "block");
       video.pause();
+      $popupVisible = true;
     });
   }
 
@@ -182,21 +185,7 @@ INST.DOM = function (key) {
   //listen for keypresses
   this.$keyboardMobile = $(".keyboard-mobile");
   var that = this;
-  //if it's an A then bind it to the mouseclick
-  /*	if (key.id === "A"){
-		$(document).mousedown(function(e){
-			e.preventDefault();
-			if (INST.loaded){
-				that.startNote();
-			}
-		});
-		$(document).mouseup(function(e){
-			e.preventDefault();
-			if (INST.loaded){
-				that.endNote();
-			}
-		});
-  }*/
+
   if (key.color) {
     var currentClickedId;
     var keyboardKey = document.createElement("div");
