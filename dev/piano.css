@@ -300,7 +300,7 @@ noscript {
 }
 
 /**media query touch devices */
-@media (hover: none) {
+@media (any-hover: none) and (pointer:coarse) {
   .keyboard-mobile {
     display: flex;
   }
@@ -326,7 +326,7 @@ noscript {
   }
 }
 
-@media (hover: hover) {
+@media (any-hover: hover) {
   .content-mobile {
     display: none;
   }
