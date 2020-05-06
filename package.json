@@ -1,0 +1,23 @@
+{
+  "name": "cmsdpiano",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CMSD Virtual Piano Duet",
+  "deploy": {
+    "path": "virtualduet/cmsd",
+    "output": "app"
+  },
+  "scripts": {
+    "deploy": "bash scripts/deploy.sh",
+    "install": "git submodule update --init"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NYUMusEdLab/cmsdpiano.git"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/NYUMusEdLab/cmsdpiano/issues"
+  },
+  "homepage": "https://github.com/NYUMusEdLab/cmsdpiano#readme"
+}
