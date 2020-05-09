@@ -300,14 +300,19 @@ INST.DOM.prototype.imageLoaded = function () {
 //called when the sound is started
 INST.DOM.prototype.startNote = function () {
   this.$img.css("opacity", 1);
-  this.$mobileKey.css("opacity", 1);
-  this.$mobileKey.css("border-top", "8px solid black");
+  if (this.$mobileKey) {
+    this.$mobileKey.css("opacity", 1);
+    this.$mobileKey.css("border-top", "8px solid black");
+  }
   this.key.startNote();
 };
 
 //called when the sound is done playing
 INST.DOM.prototype.endNote = function () {
   this.$img.css("opacity", 0);
-  this.$mobileKey.css("opacity", 0.6);
-  this.$mobileKey.css("border", "none");
+  if (this.$mobileKey) {
+    this.$mobileKey.css("opacity", 0.6);
+    this.$mobileKey.css("border", "none");
+
+  }
 };
