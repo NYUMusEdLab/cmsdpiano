@@ -207,15 +207,20 @@ INST.DOM = function (key) {
         e.changedTouches[0].clientX,
         e.changedTouches[0].clientY
       );
+      var currentClickedEl = INST.keys.find(
+        ({ id }) => id === currentClickedId
+      );
+      if (!$(selectedEl).hasClass('mobile-key')) {
+        currentClickedEl.isDown = false;
+        currentClickedEl.dom.endNote();
+        return;
+      }
       var nextElementId =
         selectedEl &&
         $(selectedEl)
           .attr("class")
           .split(" ")[0];
       var newHighlighted = getClickedEl(e);
-      var currentClickedEl = INST.keys.find(
-        ({ id }) => id === currentClickedId
-      );
       if (
         !$(selectedEl).hasClass(that.key.id) &&
         $(selectedEl).hasClass("mobile-key") &&
@@ -239,9 +244,11 @@ INST.DOM = function (key) {
     keyboardKey.addEventListener("touchend", function (e) {
       e.preventDefault();
       var touchUpEl = getClickedEl(e); //in helpers.js
-      touchUpEl.dom.isDown = false;
-      touchUpEl.dom.endNote();
-      keyboardKey.style.opacity = 0.6;
+      if (touchUpEl) {
+        touchUpEl.dom.isDown = false;
+        touchUpEl.dom.endNote();
+        keyboardKey.style.opacity = 0.6;
+      }
     });
     this.$mobileKey = $(keyboardKey);
     this.$keyboardMobile.append(keyboardKey);

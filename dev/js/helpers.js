@@ -23,12 +23,14 @@ function getClickedEl(e) {
     e.changedTouches[0].clientX,
     e.changedTouches[0].clientY
   );
-  var lastElId =
-    lastElDom &&
-    $(lastElDom)
-      .attr("class")
-      .split(" ")[0];
-  var lastEl = INST.keys.find(({ id }) => id === lastElId);
-  return lastEl;
+  if ($(lastElDom).hasClass('mobile-key')) {
+    var lastElId =
+      lastElDom &&
+      $(lastElDom)
+        .attr("class")
+        .split(" ")[0];
+    var lastEl = INST.keys.find(({ id }) => id === lastElId);
+    return lastEl;
+  }
 
 }

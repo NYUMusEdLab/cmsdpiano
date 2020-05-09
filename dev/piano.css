@@ -299,8 +299,26 @@ noscript {
   z-index: 2;
 }
 
+/*** desktop **/
+
+ .content-mobile {
+    display: none;
+  }
+  .content-desktop {
+    display: block;
+  }
+  .popup .title div {
+    font-size: 1.6em;
+    position: relative;
+    left: 12px;
+    top: 8px;
+  }
+  .popup {
+    top: 25%;
+  }
+
 /**media query touch devices */
-@media (any-hover: none) and (pointer:coarse) {
+@media (any-hover: none), (pointer:coarse) {
   .keyboard-mobile {
     display: flex;
   }
@@ -326,7 +344,7 @@ noscript {
   }
 }
 
-@media (any-hover: hover) {
+/*@media (any-hover: hover) {
   .content-mobile {
     display: none;
   }
@@ -342,7 +360,7 @@ noscript {
   .popup {
     top: 25%;
   }
-}
+}*/
 
 @media (hover: none) and (orientation: portrait) {
   .tilt {
@@ -352,18 +370,3 @@ noscript {
     display: none;
   }
 }
-/** rotate but incorrect position **/
-
-/**
-@media only screen and (orientation: portrait) {
-  html {
-    height: 100vw;
-    width: 100vh;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
-  }
-}
-*/
