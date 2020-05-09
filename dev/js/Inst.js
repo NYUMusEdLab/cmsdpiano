@@ -255,6 +255,7 @@ INST.DOM = function (key) {
   }
 
   $(document).keydown(function (e) {
+    video.blur();
     var whichKey = KEYMAP[key.id].keyCode;
     var instructionsVisibility = $(".transparency").css("display");
     if (
