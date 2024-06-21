@@ -92,7 +92,7 @@ var INST = (function () {
   function allLoaded() {
     $loadingWrapper.css("cursor", "pointer");
     $loadingBar.css("background-color", "#2c3b98");
-    $(".loadingText").html("Click here to play");
+    $(".loadingText").html("点击这里开始演奏");
     INST.loaded = true;
     $loadingWrapper.on("click", hidePopUp);
     $transparency.on("click", hidePopUp);
