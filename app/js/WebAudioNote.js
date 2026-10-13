@@ -40,6 +40,7 @@ INST.AUDIO = function(){
 */
 INST.PLAYER = function(key){
 	this.buffer = null;
+	this.voices = [];
 	this.key = key;
 	var audioFile = KEYMAP[key.id].audio;
 	if (INST.AUDIO.canPlayMP3()) {
@@ -61,9 +62,21 @@ INST.PLAYER.prototype.bufferLoaded = function(buffer){
 
 //play the note
 INST.PLAYER.prototype.startNote = function(){
+	if (INST.AUDIO.context.state === 'suspended') INST.AUDIO.context.resume();
 	var source = INST.AUDIO.context.createBufferSource();
+	var gain = INST.AUDIO.context.createGain();
+	var voice = { source: source, gain: gain };
+	this.voices.push(voice);
 	source.buffer = this.buffer;                   
-	source.connect(INST.AUDIO.context.destination);
+	source.connect(gain);
+	gain.connect(INST.AUDIO.context.destination);
+	var player = this;
+	source.onended = function(){
+		var index = player.voices.indexOf(voice);
+		if (index !== -1) player.voices.splice(index, 1);
+		source.disconnect();
+		gain.disconnect();
+	};
 	if ($.type(source.start) === "function"){
 		source.start(0);  
 	} else {
@@ -76,4 +89,15 @@ INST.PLAYER.prototype.startNote = function(){
 		that.key.endNote();
 		that = null;
 	}, duration*1000);
-}
+};
+
+// A short release avoids clicks and prevents held notes after focus/mode changes.
+INST.PLAYER.prototype.stopNote = function(){
+	var now = INST.AUDIO.context.currentTime;
+	this.voices.splice(0).forEach(function(voice){
+		voice.gain.gain.setValueAtTime(1, now);
+		voice.gain.gain.linearRampToValueAtTime(0, now + 0.03);
+		if (voice.source.stop) voice.source.stop(now + 0.03);
+		else voice.source.noteOff(now + 0.03);
+	});
+};

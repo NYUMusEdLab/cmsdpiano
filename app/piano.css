@@ -367,3 +367,23 @@ noscript {
   }
 }
 */
+
+/* Keep the Makey Makey switch available while playing. */
+#inputMode {
+  top: 20px;
+  right: 80px;
+  z-index: 20;
+  padding: 8px 12px;
+  border: 2px solid white;
+  border-radius: 20px;
+  background: #111;
+  color: white;
+  font: 14px sans-serif;
+}
+#inputMode[aria-pressed="true"] {
+  background: #2D3A99;
+}
+#inputMode:focus-visible {
+  outline: 3px solid #f8ed15;
+  outline-offset: 3px;
+}

@@ -51,4 +51,8 @@ INST.PLAYER = function(key){
 //play the note
 INST.PLAYER.prototype.startNote = function(){
 	this.sound.play();
-}
+};
+
+INST.PLAYER.prototype.stopNote = function(){
+	this.sound.stop();
+};

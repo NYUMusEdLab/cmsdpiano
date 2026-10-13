@@ -62,6 +62,7 @@ var INST = (function () {
   function init() {
     console.log("Virtual Chamber Music v" + version);
     makeKeys();
+    bindKeyboard();
   }
 
   if (is_touch_device()) isTouchDevice = true;
@@ -75,6 +76,85 @@ var INST = (function () {
       var k = new INST.KEY(id, KEYMAP[id].color);
       keys.push(k);
     }
+  }
+
+  // Track physical inputs separately: G and Left can hold the same note.
+  var pressedKeys = {};
+  var inputMode = document.getElementById("inputMode");
+  var pianoSurface = document.getElementById("container");
+  var makeyMode = false;
+
+  function keyCode(event) {
+    var code = event.code;
+    if (/^Key[A-Z]$/.test(code)) return code.charCodeAt(3);
+    var codes = { ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39,
+      ArrowDown: 40, Space: 32, Comma: 188, Period: 190, Slash: 191 };
+    return codes[code] || event.which || event.keyCode;
+  }
+
+  function isControl(target) {
+    return !!(target && target.closest && target.closest(
+      'input, textarea, select, button, a, [contenteditable]:not([contenteditable="false"]), [role="textbox"]' +
+      (makeyMode ? '' : ', video, audio')
+    ));
+  }
+
+  function releaseKey(code) {
+    var key = pressedKeys[code];
+    if (!key) return;
+    delete pressedKeys[code];
+    if (Object.keys(pressedKeys).some(function (held) { return pressedKeys[held] === key; })) return;
+    key.dom.isDown = false;
+    key.dom.endNote();
+    if (key.sound.stopNote) key.sound.stopNote();
+  }
+
+  function releaseKeyboard() {
+    Object.keys(pressedKeys).forEach(releaseKey);
+  }
+
+  function bindKeyboard() {
+    document.addEventListener("keydown", function (event) {
+      if (!INST.loaded || $popupVisible || isControl(event.target) ||
+          event.ctrlKey || event.metaKey || event.altKey || event.isComposing) return;
+      var code = keyCode(event);
+      var key = keys.find(function (candidate) {
+        var mapping = KEYMAP[candidate.id];
+        var pianoFocused = pianoSurface.contains(document.activeElement);
+        return (mapping.color || (makeyMode && pianoFocused)) &&
+          (mapping.keyCode === code || (mapping.extraKeyCodes || []).indexOf(code) !== -1);
+      });
+      if (!key) return;
+      // Prevent scroll on every handled keydown, including OS auto-repeat.
+      event.preventDefault();
+      if (pressedKeys[code] || event.repeat) return;
+      pressedKeys[code] = key;
+      if (key.dom.isDown) return;
+      key.dom.isDown = true;
+      key.dom.startNote();
+    });
+    document.addEventListener("keyup", function (event) {
+      var code = keyCode(event);
+      if (pressedKeys[code]) {
+        if (!isControl(event.target)) event.preventDefault();
+        releaseKey(code);
+      }
+    });
+    window.addEventListener("blur", releaseKeyboard);
+    window.addEventListener("pagehide", releaseKeyboard);
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) releaseKeyboard();
+    });
+    document.addEventListener("focusin", function (event) {
+      if (isControl(event.target) || (makeyMode && !pianoSurface.contains(event.target))) releaseKeyboard();
+    });
+    if (inputMode) inputMode.addEventListener("click", function () {
+      releaseKeyboard();
+      makeyMode = !makeyMode;
+      inputMode.setAttribute("aria-pressed", String(makeyMode));
+      inputMode.textContent = "Makey Makey: " + (makeyMode ? "ON" : "Off");
+      pianoSurface.focus({ preventScroll: true });
+    });
   }
 
   var loadCount = 0;
@@ -107,6 +187,11 @@ var INST = (function () {
 
   function hidePopUp() {
     if (INST.loaded === true) {
+      if (INST.AUDIO.context && INST.AUDIO.context.state === "suspended") {
+        INST.AUDIO.context.resume();
+      }
+      if (makeyMode) pianoSurface.focus({ preventScroll: true });
+      else if ($(document.activeElement).closest(".popup").length) document.activeElement.blur();
       $(".popup, .transparency").fadeTo(500, 0, function () {
         $(this).css("display", "none");
         video.play();
@@ -116,6 +201,8 @@ var INST = (function () {
   }
 
   function showPopUp() {
+    $popupVisible = true;
+    releaseKeyboard();
     $(".popup, .transparency").fadeTo(500, 1, function () {
       $(this).css("display", "block");
       video.pause();
@@ -247,27 +334,6 @@ INST.DOM = function (key) {
     this.$keyboardMobile.append(keyboardKey);
   }
 
-  $(document).keydown(function (e) {
-    var whichKey = KEYMAP[key.id].keyCode;
-    var instructionsVisibility = $(".transparency").css("display");
-    if (
-      e.which === whichKey &&
-      INST.loaded &&
-      !that.isDown &&
-      instructionsVisibility !== "block"
-    ) {
-      e.preventDefault();
-      that.isDown = true;
-      that.startNote();
-    }
-  });
-  $(document).keyup(function (e) {
-    var whichKey = KEYMAP[key.id].keyCode;
-    if (e.which === whichKey && INST.loaded) {
-      that.isDown = false;
-      that.endNote();
-    }
-  });
 };
 
 INST.DOM.prototype.imageLoaded = function () {
@@ -300,14 +366,18 @@ INST.DOM.prototype.imageLoaded = function () {
 //called when the sound is started
 INST.DOM.prototype.startNote = function () {
   this.$img.css("opacity", 1);
-  this.$mobileKey.css("opacity", 1);
-  this.$mobileKey.css("border-top", "8px solid black");
+  if (this.$mobileKey) {
+    this.$mobileKey.css("opacity", 1);
+    this.$mobileKey.css("border-top", "8px solid black");
+  }
   this.key.startNote();
 };
 
 //called when the sound is done playing
 INST.DOM.prototype.endNote = function () {
   this.$img.css("opacity", 0);
-  this.$mobileKey.css("opacity", 0.6);
-  this.$mobileKey.css("border", "none");
+  if (this.$mobileKey) {
+    this.$mobileKey.css("opacity", 0.6);
+    this.$mobileKey.css("border", "none");
+  }
 };

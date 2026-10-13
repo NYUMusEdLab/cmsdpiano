@@ -65,7 +65,8 @@ var KEYMAP = {
   L: {
     audio: "gb5",
     image: "pianogb5",
-    keyCode: 37
+    keyCode: 37,
+    extraKeyCodes: [71] // G: same note as Left, confirmed October 2026.
   },
   U: {
     audio: "ab5",
