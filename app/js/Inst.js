@@ -127,19 +127,24 @@ var INST = (function () {
       if (!key) return;
       // Prevent scroll on every handled keydown, including OS auto-repeat.
       event.preventDefault();
+      // Native video controls handle trusted keys before document bubbling.
+      event.stopPropagation();
       if (pressedKeys[code] || event.repeat) return;
       pressedKeys[code] = key;
       if (key.dom.isDown) return;
       key.dom.isDown = true;
       key.dom.startNote();
-    });
+    }, true);
     document.addEventListener("keyup", function (event) {
       var code = keyCode(event);
       if (pressedKeys[code]) {
-        if (!isControl(event.target)) event.preventDefault();
+        if (!isControl(event.target)) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
         releaseKey(code);
       }
-    });
+    }, true);
     window.addEventListener("blur", releaseKeyboard);
     window.addEventListener("pagehide", releaseKeyboard);
     document.addEventListener("visibilitychange", function () {
