@@ -113,7 +113,7 @@ function renderTakes() {
     const title=take.title||'Melody '+new Date(take.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     const noteCount=take.events.filter(e=>e.type==='on').length;
     card.innerHTML='<div class="take-heading"><input class="take-title" type="text" maxlength="80" /></div><p class="take-meta"></p><canvas class="take-roll" width="252" height="92" role="img"></canvas><div class="take-actions"><button class="take-play" type="button"></button><button class="take-duet" type="button">With duet</button><button class="take-delete" type="button">×</button></div>';
-    const input=card.querySelector('input');input.value=title;input.setAttribute('aria-label','Name for '+title);input.onchange=()=>TK.rename(take.id,input.value.trim().slice(0,80));input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();input.blur();}};
+    const input=card.querySelector('input');input.value=title;input.setAttribute('aria-label','Name for '+title);const saveTitle=()=>{const value=input.value.trim().slice(0,80);if(value!==(TK.get(take.id)?.title||'')&&value!==title)TK.rename(take.id,value);};input.onchange=saveTitle;input.onblur=saveTitle;input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();input.blur();}};
     const time=new Date(take.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     card.querySelector('.take-meta').textContent=`${time} · ${(take.duration/1000).toFixed(1)} s · ${noteCount} notes · Duet ${formatTime(Number(take.media?.offset)||0)}`;
     card.querySelector('canvas').setAttribute('aria-label',`${title}, ${noteCount} notes: ${take.events.filter(e=>e.type==='on').map(e=>names[pitches.indexOf(e.midi)]).join(', ')}`);
