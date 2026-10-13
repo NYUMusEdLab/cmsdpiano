@@ -301,6 +301,9 @@ noscript {
 
 /**media query touch devices */
 @media (any-hover: none) and (pointer:coarse) {
+  #inputMode {
+    display: none;
+  }
   .keyboard-mobile {
     display: flex;
   }

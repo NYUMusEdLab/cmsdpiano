@@ -106,11 +106,15 @@ var INST = (function () {
     if (Object.keys(pressedKeys).some(function (held) { return pressedKeys[held] === key; })) return;
     key.dom.isDown = false;
     key.dom.endNote();
-    if (key.sound.stopNote) key.sound.stopNote();
+    // Keyup releases the input/highlight; let the piano sample ring out.
   }
 
   function releaseKeyboard() {
     Object.keys(pressedKeys).forEach(releaseKey);
+    // Only explicit cleanup interrupts sounding notes, including released tails.
+    keys.forEach(function (key) {
+      if (key.sound.stopNote) key.sound.stopNote();
+    });
   }
 
   function bindKeyboard() {
