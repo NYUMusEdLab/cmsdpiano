@@ -94,8 +94,7 @@ var INST = (function () {
 
   function isControl(target) {
     return !!(target && target.closest && target.closest(
-      'input, textarea, select, button, a, [contenteditable]:not([contenteditable="false"]), [role="textbox"]' +
-      (makeyMode ? '' : ', video, audio')
+      'input, textarea, select, button, a, [contenteditable]:not([contenteditable="false"]), [role="textbox"]'
     ));
   }
 
@@ -113,6 +112,8 @@ var INST = (function () {
     Object.keys(pressedKeys).forEach(releaseKey);
     // Only explicit cleanup interrupts sounding notes, including released tails.
     keys.forEach(function (key) {
+      key.dom.isDown = false;
+      key.dom.endNote();
       if (key.sound.stopNote) key.sound.stopNote();
     });
   }
@@ -129,6 +130,8 @@ var INST = (function () {
           (mapping.keyCode === code || (mapping.extraKeyCodes || []).indexOf(code) !== -1);
       });
       if (!key) return;
+      // Note keys work with video focus in either mode. Unmapped media keys
+      // (including Space and arrows with Makey off) keep their native behavior.
       // Prevent scroll on every handled keydown, including OS auto-repeat.
       event.preventDefault();
       // Native video controls handle trusted keys before document bubbling.
