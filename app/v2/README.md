@@ -32,3 +32,7 @@ The browser fixture isolates localStorage in memory, then checks actual Web Audi
 waveforms and captured event streams as well as the UI. These are simulated
 browser key/touch tests; physical Makey Makey and phone/tablet devices require
 separate hardware testing.
+
+Return from replay: Stop and Play along resume the duet and return focus to the
+piano. Collapsing during replay also returns to live duet playing. With-duet
+playback leaves the background running when the saved phrase finishes.

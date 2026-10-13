@@ -28,6 +28,21 @@ $('inputMode').click();focus();const start=scheduled;down('KeyZ');await sleep(45
 const input=$('takes').querySelector('input');input.focus();const n=scheduled;const num=counts();down('KeyZ',input);up('KeyZ',input);check('Naming field does not play or record notes',scheduled===n&&!capture.recorder.active());input.value='My little contour';input.blur();check('Renaming persists on blur',TK.list()[0].title==='My little contour');
 let play=$('takes').querySelector('.take-play');play.click();await sleep(140);check('Replay schedules audible notes without capturing itself',capture.player.playing()!==null&&rms()>.001&&!capture.recorder.active());await sleep(1200);check('Replay finishes without adding another take',counts()===num&&capture.player.playing()===null&&!capture.recorder.active());
 $('takes').querySelector('.take-duet').click();await sleep(150);check('With-duet replay restores saved video position and plays',!document.querySelector('video').paused&&Math.abs(document.querySelector('video').currentTime-TK.list()[0].media.offset)<1);$('takes').querySelector('.take-play').click();check('Stop cancels scheduled replay',capture.player.playing()===null);
+const duetVideo=document.querySelector('video');
+// Real clicks focus the Stop button before its card is rebuilt; synthetic click alone misses this regression.
+$('inputMode').click();
+for(let cycle=0;cycle<3;cycle++){
+  $('takes').querySelector('.take-play').focus();$('takes').querySelector('.take-play').click();await sleep(100);
+  $('takes').querySelector('.take-play').focus();$('takes').querySelector('.take-play').click();await sleep(100);
+  const beforeNote=scheduled;down('ArrowLeft');await sleep(80);up('ArrowLeft');
+  check('Stop replay returns Makey focus and audible live duet, cycle '+(cycle+1),document.activeElement===$('container')&&!duetVideo.paused&&scheduled===beforeNote+1&&capture.recorder.active()&&rms()>.001);capture.finishCapture();
+}
+$('inputMode').click();duetVideo.pause();$('takes').querySelector('.take-duet').click();await sleep(1200);
+check('With-duet completion keeps background running from a previously paused state',capture.player.playing()===null&&!duetVideo.paused);
+$('takes').querySelector('.take-play').click();$('trayToggle').click();await sleep(100);
+check('Collapsing during solo replay returns to live duet',capture.player.playing()===null&&!duetVideo.paused&&document.activeElement===$('container'));$('trayToggle').click();
+duetVideo.pause();$('returnToDuet').focus();$('returnToDuet').click();await sleep(100);const beforeReturn=scheduled;down('KeyZ');await sleep(80);up('KeyZ');
+check('Play along restores background, keyboard audio and capture together',!duetVideo.paused&&scheduled===beforeReturn+1&&capture.recorder.active()&&rms()>.001);capture.finishCapture();
 $('takes').querySelector('.take-play').click();focus();down('KeyZ');await sleep(100);up('KeyZ');check('Live playing interrupts replay and begins fresh capture',capture.player.playing()===null&&capture.recorder.active());off();
 $('takes').querySelector('.take-delete').click();check('Delete removes one take and offers undo',counts()===num-1&&!$('undoNotice').hidden);$('undoDelete').click();check('Undo restores deleted take',counts()===num);
 const json=TK.exportJSON();check('Export contains events and take titles',JSON.parse(json).takes.length===num&&json.includes('My little contour'));check('Import deduplicates prior takes',TK.importJSON(json)===0&&counts()===num);

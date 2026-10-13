@@ -45,6 +45,13 @@ function toggleTray() {
   $('trayContents').hidden=!expanded;
   try { localStorage.setItem('cmsd.duet.v2.tray',String(expanded)); } catch(_) {}
   if (expanded) requestAnimationFrame(drawCards);
+  else if (replayId) returnToDuet();
+  $('container').focus({preventScroll:true});
+}
+function returnToDuet() {
+  stopReplay(true);
+  if (window.INST.AUDIO.context?.state==='suspended') window.INST.AUDIO.context.resume();
+  video.play().catch(()=>status('Press play on the duet video to continue.'));
   $('container').focus({preventScroll:true});
 }
 function releaseReplayVoice(voice) {
@@ -72,8 +79,12 @@ function stopReplay(keepDuet=false, natural=false) {
     if (keepDuet || priorVideo.playing) video.play().catch(()=>{}); else video.pause();
   }
   priorVideo=null;
+  const returnFocus=$('takes').contains(document.activeElement)&&document.activeElement.matches('button');
   status('Ready for your next phrase');
   renderTakes();
+  // Replacing the Stop button removes its focus. Return it to the piano so
+  // Makey inputs work immediately, without clicking (and pausing) the video.
+  if(returnFocus)$('container').focus({preventScroll:true});
 }
 function startReplay(take, withDuet) {
   finishCapture();
@@ -91,7 +102,7 @@ function startReplay(take, withDuet) {
       const card=[...$('takes').children].find(c=>c.dataset.id===take.id);
       if (card&&!$('trayContents').hidden) TK.drawRoll(card.querySelector('canvas'),take.events,{...rollOptions,duration:take.duration,playhead:ms});
     },
-    onEnd() {stopReplay(false,true);}
+    onEnd() {stopReplay(withDuet,true);}
   });
   renderTakes();
   $('container').focus({preventScroll:true});
@@ -117,7 +128,7 @@ function renderTakes() {
     const time=new Date(take.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
     card.querySelector('.take-meta').textContent=`${time} · ${(take.duration/1000).toFixed(1)} s · ${noteCount} notes · Duet ${formatTime(Number(take.media?.offset)||0)}`;
     card.querySelector('canvas').setAttribute('aria-label',`${title}, ${noteCount} notes: ${take.events.filter(e=>e.type==='on').map(e=>names[pitches.indexOf(e.midi)]).join(', ')}`);
-    const play=card.querySelector('.take-play');play.textContent=replayId===take.id?'■ Stop':'▶ Replay';play.setAttribute('aria-label',(replayId===take.id?'Stop ':'Replay ')+title);play.onclick=()=>replayId===take.id?stopReplay():startReplay(take,false);
+    const play=card.querySelector('.take-play');play.textContent=replayId===take.id?'■ Stop':'▶ Replay';play.setAttribute('aria-label',(replayId===take.id?'Stop ':'Replay ')+title);play.onclick=()=>replayId===take.id?returnToDuet():startReplay(take,false);
     const duet=card.querySelector('.take-duet');duet.setAttribute('aria-label','Play '+title+' with duet');duet.onclick=()=>startReplay(take,true);
     const del=card.querySelector('.take-delete');del.setAttribute('aria-label','Delete '+title);del.onclick=()=>{if(replayId===take.id)stopReplay();removed=take;TK.remove(take.id);$('undoNotice').hidden=false;status('Phrase removed. Undo is available.');};
     host.append(card);
@@ -145,6 +156,7 @@ recorder=TK.createRecorder({
 const originalStart=window.INST.DOM.prototype.startNote;
 const originalEnd=window.INST.DOM.prototype.endNote;
 window.INST.DOM.prototype.startNote=function(){
+  $('container').focus({preventScroll:true});
   stopReplay(true);
   const result=originalStart.apply(this,arguments);
   const midi=midiFor(this.key);
@@ -189,6 +201,7 @@ function bindCleanup(){
 }
 bindCleanup();
 $('trayToggle').onclick=toggleTray;
+$('returnToDuet').onclick=returnToDuet;
 $('finishTake').onclick=()=>{finishCapture();$('container').focus({preventScroll:true});};
 $('undoDelete').onclick=()=>{if(removed){TK.save(removed);removed=null;}$('undoNotice').hidden=true;status('Phrase restored');};
 $('exportTakes').onclick=()=>{

@@ -29,6 +29,8 @@ body { height:100dvh; overflow:hidden; background:#080b0c; display:grid; grid-te
 #liveMini { width:140px; height:32px; border-radius:3px; background:#e9efe9; }
 #melodyTray #finishTake { border-color:#567771; color:#fff; }
 #melodyTray #finishTake:hover:not(:disabled) { background:#2c504d; }
+#melodyTray #returnToDuet { background:#f2d89f; border-color:#f2d89f; color:#142d30; white-space:nowrap; }
+#melodyTray #returnToDuet:hover { background:#ffe7b7; }
 #trayContents { padding:0 22px 10px; max-height:min(330px,44dvh); overflow:auto; }
 #trayContents[hidden] { display:none; }
 .notebook-tools { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 0; }
