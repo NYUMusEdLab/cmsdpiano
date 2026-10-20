@@ -39,14 +39,18 @@ function drawCards() {
     if (take) TK.drawRoll(card.querySelector('canvas'),take.events,{...rollOptions,duration:take.duration});
   }
 }
-function toggleTray() {
-  const expanded=$('trayToggle').getAttribute('aria-expanded')!=='true';
+const compactLandscape=window.matchMedia('(orientation:landscape) and (max-height:520px) and (pointer:coarse)');
+function setTrayExpanded(expanded,{persist=true,focusPiano=true}={}) {
   $('trayToggle').setAttribute('aria-expanded',String(expanded));
   $('trayContents').hidden=!expanded;
-  try { localStorage.setItem('cmsd.duet.v2.tray',String(expanded)); } catch(_) {}
+  $('melodyTray').classList.toggle('notebook-open',expanded);
+  if (persist) try { localStorage.setItem('cmsd.duet.v2.tray',String(expanded)); } catch(_) {}
   if (expanded) requestAnimationFrame(drawCards);
   else if (replayId) returnToDuet();
-  $('container').focus({preventScroll:true});
+  if (focusPiano) $('container').focus({preventScroll:true});
+}
+function toggleTray() {
+  setTrayExpanded($('trayToggle').getAttribute('aria-expanded')!=='true');
 }
 function returnToDuet() {
   stopReplay(true);
@@ -201,7 +205,14 @@ function bindCleanup(){
 }
 bindCleanup();
 $('trayToggle').onclick=toggleTray;
-$('returnToDuet').onclick=returnToDuet;
+$('returnToDuet').onclick=()=>{
+  if (compactLandscape.matches && $('trayToggle').getAttribute('aria-expanded')==='true') {
+    const hadReplay=Boolean(replayId);
+    setTrayExpanded(false);
+    if (hadReplay) return; // Closing a replay already resumed the duet.
+  }
+  returnToDuet();
+};
 $('finishTake').onclick=()=>{finishCapture();$('container').focus({preventScroll:true});};
 $('undoDelete').onclick=()=>{if(removed){TK.save(removed);removed=null;}$('undoNotice').hidden=true;status('Phrase restored');};
 $('exportTakes').onclick=()=>{
@@ -217,7 +228,11 @@ $('importTakes').onchange=async()=>{
 document.addEventListener('cmsd:takes',renderTakes);
 window.addEventListener('storage',e=>{if(e.key==='cmsd.duet.v2.takes')renderTakes();});
 new ResizeObserver(()=>{drawCards();if(!recorder.active())TK.drawRoll($('liveMini'),[],{...rollOptions,labels:null});}).observe($('melodyTray'));
-try{if(localStorage.getItem('cmsd.duet.v2.tray')==='false')toggleTray();}catch(_){}
+let trayPreference=null;
+try { trayPreference=localStorage.getItem('cmsd.duet.v2.tray'); } catch(_) {}
+// On a first landscape phone visit, leave the piano playable until the notebook
+// is explicitly opened. Existing saved open/closed choices are still respected.
+setTrayExpanded(trayPreference==='true'||(trayPreference!=='false'&&!compactLandscape.matches),{persist:false,focusPiano:false});
 renderTakes();
 
 // Dedicated test fixtures can observe this public adapter without changing
