@@ -26,6 +26,7 @@ to their existing 291ad08 versioned names. Only v2 files are published.
 
 Validation:
   node test/cmsd-takes.mjs
+  node test/cmsd-orientation.mjs
   python3 -m http.server 8000   (from repository root)
   open http://localhost:8000/test/cmsd-v2.html and click Run v2 checks.
 The browser fixture isolates localStorage in memory, then checks actual Web Audio
@@ -49,3 +50,26 @@ The current hosted entry has later consent, language and pinned dependencies
 not yet fully reconciled into this repository. Publish this change as a narrow
 overlay on that current entry, retaining every unchanged live dependency.
 Do not replace the hosted entry wholesale with this source wrapper.
+
+Mobile layout: one complete melody per page on compact/touch displays, with
+previous/next controls and all melodies retained in export/import. Short landscape
+puts the notebook beside the video. Safe-area padding and visualViewport height
+keep controls within the visible screen. Rotation preserves playback state; the
+video and transparent keys share the same contain-fit rectangle. Makey Makey is
+hidden on touch displays. Privacy preferences reuse the existing shared consent
+button inside welcome/help; no consent or analytics implementation is changed.
+
+Mobile fixture: serve the repository as above, open
+/test/cmsd-mobile.html?touch=1&lang=en and click Run mobile checks after samples
+load. F8 simulates safe-area insets; F9 records geometry in #layoutReport.
+Use lang=zh for Chinese. Fixture storage is temporary and Google is intercepted.
+The consent fixture is pinned to the existing access-r2-20261020 integration.
+
+Release validation: 58 existing browser checks and 26 mobile checks passed,
+including actual Web Audio, captures, replay, pagination, export/import,
+delete/undo and collapse. Eight viewport sizes and eight simulated safe-area
+layouts passed: 320x480 through 1024x680, including 568x280 landscape. These are
+Chrome simulations, not physical iOS verification. The live analytics release
+was subsequently retained by an exact entry-only rebase; its footer placement
+hook and CSS are unchanged. The updated analytics fixture and stronger rotation
+assertion have not been rerun in a browser after the browser connection closed.

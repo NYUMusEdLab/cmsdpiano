@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html data-duet-responsive>
 
 <head>
   <meta charset="utf-8" />
   <base href="../" />
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
   <meta http-equiv="Cache-control" content="no-cache" />
   <link rel="icon" type="image/png" href="./media/favicon.png" />
   <!--
@@ -23,6 +23,8 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,400i&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./v2/welcome-controls.css" />
   <script type="module" src="./v2/language.mjs"></script>
+  <link rel="stylesheet" href="./v2/mobile-layout.css" />
+  <script type="module" src="./v2/mobile-layout.mjs"></script>
 </head>
 
 <body>
@@ -92,6 +94,7 @@
     <div class="welcome-controls">
       <button id="inputMode" type="button" aria-pressed="false">Makey Makey: Off</button>
       <nav class="workshop-language" aria-label="Language / 语言"><button type="button" data-language="en" lang="en">English</button><button type="button" data-language="zh" lang="zh-CN">中文</button></nav>
+      <div class="welcome-privacy" data-privacy-footer></div>
     </div>
     <div class="content-desktop">
       <div class="instructions">

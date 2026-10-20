@@ -1,0 +1,1 @@
+Exact shared public consent assets retrieved 2026-10-20 from https://apps.musedlab.org/_musedlab/access-r2-20261020/. Test-only copies; production retains those existing URLs. mobile-isolate.js replaces fixture storage and blocks Google transport. No participant data is used.

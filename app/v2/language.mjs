@@ -5,6 +5,7 @@ const dictionary={
  "Oh no! We can't fit everything on your screen.":'当前屏幕无法完整显示界面。','Please rotate your device.':'请旋转设备。',
  'Makey Makey: Off':'Makey Makey：关','Makey Makey: On':'Makey Makey：开','Makey Makey: ON':'Makey Makey：开',
  'Help and settings':'帮助与设置',
+ 'Saved melody pages':'已保存的旋律页','Previous melody':'上一段旋律','Next melody':'下一段旋律',
  'Your browser does not support the video tag.':'此浏览器不支持视频播放。',
  'Melody notebook':'旋律笔记本','Play a phrase to begin':'演奏一个乐句，开始记录','Live melody contour':'实时旋律曲线',
  'Save phrase':'保存乐句','Play along':'跟随演奏','Saved melodies':'已保存的旋律',

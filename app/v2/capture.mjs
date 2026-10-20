@@ -35,6 +35,7 @@ function finishCapture() { if (recorder?.active()) recorder.finish(); }
 function drawCards() {
   if ($('trayContents').hidden) return;
   for (const card of $('takes').querySelectorAll('.take-card')) {
+    if (card.hidden) continue;
     const take=TK.get(card.dataset.id);
     if (take) TK.drawRoll(card.querySelector('canvas'),take.events,{...rollOptions,duration:take.duration});
   }
@@ -215,6 +216,7 @@ $('importTakes').onchange=async()=>{
   $('importTakes').value='';
 };
 document.addEventListener('cmsd:takes',renderTakes);
+window.addEventListener('cmsd:layout',()=>requestAnimationFrame(drawCards));
 window.addEventListener('storage',e=>{if(e.key==='cmsd.duet.v2.takes')renderTakes();});
 new ResizeObserver(()=>{drawCards();if(!recorder.active())TK.drawRoll($('liveMini'),[],{...rollOptions,labels:null});}).observe($('melodyTray'));
 try{if(localStorage.getItem('cmsd.duet.v2.tray')==='false')toggleTray();}catch(_){}

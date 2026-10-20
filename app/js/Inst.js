@@ -23,7 +23,7 @@ const video = document.getElementsByTagName("video")[0];
 
 if (screen.orientation) {
   screen.orientation.addEventListener("change", () => {
-    if (!$popupVisible) {
+    if (!$popupVisible && !document.documentElement.hasAttribute("data-duet-responsive")) {
       if (screen.orientation.type.indexOf("portrait") >= 0) {
         video.pause();
       } else {
@@ -31,7 +31,7 @@ if (screen.orientation) {
       }
     }
   });
-} else if (window.orientation && !$popupVisible) {
+} else if (window.orientation && !$popupVisible && !document.documentElement.hasAttribute("data-duet-responsive")) {
   switch (window.orientation) {
     case 0:
     case 180:
