@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="./v2/duet-v2.css" />
   <!-- font -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,400i&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./v2/welcome-controls.css" />
+  <script type="module" src="./v2/language.mjs"></script>
 </head>
 
 <body>
@@ -39,8 +41,7 @@
     <div id="titlebar">
       <a id="icon" href="http://www.chambermusicdetroit.org"><img src="./media/cmsdlogolg.png" /></a>
     </div>
-    <div class="helpBtn">?</div>
-    <button id="inputMode" type="button" aria-pressed="false">Makey Makey: Off</button>
+    <button class="helpBtn" type="button" aria-label="Help and settings" aria-controls="welcome-panel">?</button>
     <video width="100%" height="100%" controls loop volume="0.6" webkit-playsinline playsinline>
       <source src="media/piano.mp4" type="video/mp4" />
       <source src="media/piano.m4v" type="video/m4v" />
@@ -83,10 +84,14 @@
     </section>
   </footer>
   <div class="transparency"></div>
-  <div class="popup">
+  <div class="popup" id="welcome-panel">
     <div class="title">
       <img src="./media/logos/NewLogo5-blue.png" />
       <div>Virtual Piano Duet</div><p class="v2-subtitle">MELODY NOTEBOOK</p>
+    </div>
+    <div class="welcome-controls">
+      <button id="inputMode" type="button" aria-pressed="false">Makey Makey: Off</button>
+      <nav class="workshop-language" aria-label="Language / 语言"><button type="button" data-language="en" lang="en">English</button><button type="button" data-language="zh" lang="zh-CN">中文</button></nav>
     </div>
     <div class="content-desktop">
       <div class="instructions">

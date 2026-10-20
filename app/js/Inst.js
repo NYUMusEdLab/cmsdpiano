@@ -165,7 +165,8 @@ var INST = (function () {
       makeyMode = !makeyMode;
       inputMode.setAttribute("aria-pressed", String(makeyMode));
       inputMode.textContent = "Makey Makey: " + (makeyMode ? "ON" : "Off");
-      pianoSurface.focus({ preventScroll: true });
+      // Keep settings focus inside the welcome panel until the player starts.
+      if (!$popupVisible) pianoSurface.focus({ preventScroll: true });
     });
   }
 
