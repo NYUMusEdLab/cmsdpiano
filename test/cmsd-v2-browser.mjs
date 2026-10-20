@@ -13,6 +13,8 @@ const off=()=>window.dispatchEvent(new Event('blur'));
 $('v2save').onclick=()=>{const a=document.createElement('a');a.download='cmsd-v2-browser-report.json';a.href=URL.createObjectURL(new Blob([out.textContent],{type:'application/json'}));a.click();};
 $('v2run').onclick=async function(){try{
 this.blur();if(!INST.loaded)throw Error('Wait for samples');
+// Landscape phones start with the notebook closed; normalize the fixture before interaction tests.
+if($('trayToggle').getAttribute('aria-expanded')==='false')$('trayToggle').click();
 check('Settings exist once, inside the welcome panel',document.querySelectorAll('#inputMode').length===1&&document.querySelectorAll('.workshop-language').length===1&&!!document.querySelector('.popup #inputMode')&&!!document.querySelector('.popup .workshop-language'));
 check('Main piano only retains the accessible help control',!document.querySelector('#container #inputMode')&&!document.querySelector('body > .workshop-language')&&document.querySelector('.helpBtn').tagName==='BUTTON');
 $('inputMode').focus();$('inputMode').click();
